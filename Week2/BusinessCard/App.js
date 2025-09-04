@@ -9,25 +9,25 @@ export default function App() {
         <View style = {styles.imageContainer}>
           <Image 
             style = {styles.image}
-            source = {require("./assets/images/business_image.jpg")}
+            source = {require("./assets/images/my_picture.jpg")}
           />
         </View>
         <View style = {styles.textContainer}>
           <Text 
-          style = {styles.name}> Player's Choice</Text>
+          style = {styles.name}> Tyler Rushing</Text>
           <Text style = {styles.text}
           onPress = { () => 
-            {Linking.openURL("https://www.playerschoicenmb.com/");
+            {Linking.openURL("https://github.com/tsrushing-alt/CSCI-343");
             }}
-            > https://www.playerschoicenmb.com/</Text>
+            > https://github.com/tsrushing-alt/CSCI-343</Text>
           <Text 
             style = {styles.text}
             onPress = { () => {
-              Linking.openURL("tel:8432720268");
+              Linking.openURL("tel:8434247692");
               }}
-              > 843-272-0268</Text>
+              > Phone: 843-424-7692</Text>
           <Text style = {styles.text}
-          onPress = { () => {Linking.openURL("https://maps.app.goo.gl/4PxBMQBtdhxixosD9")}}> Open in Google Maps</Text>
+          onPress = { () => {Linking.openURL("mailto: drutsrid@gmail.com")}}> Email: drutsrid@gmail.com</Text>
         </View>
 
       </SafeAreaView>
@@ -46,15 +46,16 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     height: 300,
-    marginTop: 70,
+    marginTop: 100,
     width: "100%",
-    justifyContent: "center"
+    justifyContent: "center",
+    marginBottom: 100
 
   },
   image: {
-    height: 240,
+    height: 400,
     width: "100%",
-    resizeMode: "contain",
+    resizeMode: "stretch",
     borderColor: "black",
     borderWidth: 5
   },
