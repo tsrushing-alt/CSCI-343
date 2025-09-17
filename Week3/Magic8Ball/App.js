@@ -5,7 +5,7 @@ import React, {useState} from 'react'
 
 export default function App() {
 
-  const [modalIsVisible, setModalIsVisible] = useState(true);
+  const [modalIsVisible, setModalIsVisible] = useState(false);
   const [userInput, setUserInput] = useState("");
   const responses = [
     "It is certain",
@@ -75,7 +75,7 @@ export default function App() {
           </View>
           <View style = {styles.buttonContainer}>
             <Pressable
-            android_ripples={{color: "grey"}}
+            android_ripple={{color: "grey"}}
             onPress={startInputHandler}
             style = {({pressed}) => pressed && styles.pressedButton}
             >
