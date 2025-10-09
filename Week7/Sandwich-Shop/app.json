@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Sandwich-Shop",
+    "slug": "Sandwich-Shop",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/sub.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/sub.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/sub.png",
+        "backgroundColor": "#000000"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/images/sub.png"
+    }
+  }
+}

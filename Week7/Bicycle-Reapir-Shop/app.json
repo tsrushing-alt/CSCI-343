@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Bicycle-Reapir-Shop",
+    "slug": "Bicycle-Reapir-Shop",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/bike.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/bike.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/bike.png",
+        "backgroundColor": "#000000"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/images/bike.png"
+    }
+  }
+}
