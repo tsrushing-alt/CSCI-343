@@ -11,7 +11,7 @@ import * as Font from "expo-font";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 //Keep splash screen visible while we fetch resources
-//SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 
 
 

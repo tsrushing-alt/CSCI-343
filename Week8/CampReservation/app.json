@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "CampReservation",
+    "slug": "CampReservation",
+    "version": "1.0.0",
+    "orientation": "auto",
+    "icon": "./assets/images/tent.jpg",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/tent.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/tent.jpg",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/images/tent.jpg"
+    }
+  }
+}
