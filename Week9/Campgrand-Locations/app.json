@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Campgrand-Locations",
+    "slug": "Campgrand-Locations",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/tent.jpg",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/tent.jpg",
+      "resizeMode": "cover",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/tent.jpg",
+        "backgroundColor": "#000000"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/images/tent.jpg"
+    }
+  }
+}
