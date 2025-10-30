@@ -6,7 +6,6 @@ class Destination {
     averageCost,
     foundedYear,
     rating,
-    description,
     imageUrl
   ) {
     this.id = id;
@@ -15,7 +14,6 @@ class Destination {
     this.averageCost = averageCost;
     this.foundedYear = foundedYear;
     this.rating = rating;
-    this.description = description;
     this.imageUrl = imageUrl;
   }
 }

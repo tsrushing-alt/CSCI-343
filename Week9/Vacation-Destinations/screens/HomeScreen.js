@@ -25,7 +25,7 @@ export default function HomeScreen({ navigation }) {
     <View>
       <FlatList
         data={COUNTRIES}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => {return item.id;}}
         renderItem={renderCountryItem}
         numColumns = {2}
       />

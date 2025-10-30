@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Real-Estate",
+    "slug": "Real-Estate",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/realEstateSplash.jpg",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/realEstateSplash.jpg",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/realEstateSplash.jpg",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/images/realEstateSplash.jpg"
+    }
+  }
+}

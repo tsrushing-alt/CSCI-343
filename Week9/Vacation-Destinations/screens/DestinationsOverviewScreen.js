@@ -22,7 +22,6 @@ export default function DestinationsOverviewScreen({ route, navigation }) {
       averageCost: itemData.item.averageCost,
       foundedYear: itemData.item.foundedYear,
       rating: itemData.item.rating,
-      description: itemData.item.description,
       listIndex: itemData.item.index,
     };
 

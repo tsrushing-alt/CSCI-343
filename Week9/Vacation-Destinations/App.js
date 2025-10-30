@@ -47,9 +47,7 @@ export default function App() {
           <Stack.Screen 
             name="DestinationsOverview"
             component={DestinationsOverviewScreen}
-            options={{
-              title: "Explore Destinations"
-            }}
+
           />
         </Stack.Navigator>
       </NavigationContainer>
