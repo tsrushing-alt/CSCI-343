@@ -96,7 +96,7 @@ function TabsNavigator(){
         options={{
           headerShown: false,
           tabBarIcon: ({color, size}) => (
-            <Entypo name = "home" color={color} size={size} />
+            <MaterialCommunityIcons name = "newspaper" color={color} size={size} />
           ),
           tabBarLabel: "US News"
         }}
