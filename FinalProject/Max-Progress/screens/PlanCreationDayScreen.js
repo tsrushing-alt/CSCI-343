@@ -1,16 +1,45 @@
-import { Button, Text, View } from "react-native";
+import { useContext } from "react";
+import { View, Text, Button, FlatList, StyleSheet } from "react-native";
+import { PlanContext } from "../store/context/PlanContext";
+import DayItem from "../components/DayItem";
 
+export default function PlanCreationDayScreen({ navigation }) {
+  const { currentPlan, saveCurrentPlan } = useContext(PlanContext);
+  if (!currentPlan) return null;
 
+  function renderDayItem({ item }) {
+    return (
+      <DayItem
+        label={`Day ${item.dayIndex + 1}`}
+        onPress={() => navigation.navigate("ExerciseSelection", { dayIndex: item.dayIndex })}
+      />
+    );
+  }
 
-export default function PlanCreationDayScreen({navigation}){
-  return(
-    <View>
-      <View>
-        <Text>This Is The Plan Creation Day Screen</Text>
-      </View>
-      <View>
-        <Button title="Next" onPress ={() => navigation.navigate("PlanCreationExercise")}/>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.optionsText}>Select Day to Enter Exercises</Text>
+
+      <FlatList
+        data={currentPlan.days}
+        keyExtractor={item => item.dayIndex.toString()}
+        renderItem={renderDayItem}
+        style={styles.list}
+      />
+
+      <Button title="DEBUG: Show Plan Structure" onPress={() => console.log(currentPlan)} />
+
+      <View style={styles.buttonContainer}>
+        <Button title="Finish" onPress={() => { saveCurrentPlan?.(); navigation.popToTop(); }} />
       </View>
     </View>
-  )
+  );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  optionsText: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+  list: { marginBottom: 20 },
+  buttonContainer: { marginTop: 20 }
+});
+
