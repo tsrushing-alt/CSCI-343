@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
-import { View, Text, Button, FlatList, Alert } from "react-native";
+import { View, Text, Button, FlatList, Alert, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 import { PlanContext } from "../store/context/PlanContext";
 import EXERCISES from "../data/exercises";
+import Colors from "../constants/colors/colors";
 
 const MUSCLE_GROUPS = ["Chest","Back","Biceps","Triceps","Shoulders","Quads","Hamstrings","Glutes","Forearms","Abs"];
 
@@ -53,10 +54,13 @@ export default function ExerciseSelectionScreen({ route }) {
 
     return (
       <View style={{ marginBottom: 20 }}>
-        <Text style={{ fontWeight: "bold" }}>{groupName}</Text>
-        {exercises.map((ex, idx) => <Text key={`${groupName}-${ex.id}-${idx}`}>{ex.name}</Text>)}
+        <Text style={{ fontWeight: "bold", color: Colors.accent200, fontSize: 20 }}>{groupName}</Text>
+        {exercises.map((ex, idx) => (
+          <Text style={{ color: Colors.accent800, fontSize: 18 }} key={`${groupName}-${ex.id}-${idx}`}>{ex.name}</Text>
+        ))}
 
         <Picker
+          style={{ color: Colors.accent800, fontSize: 18 }}
           selectedValue={pickerValues[groupName] || null}
           onValueChange={val => setPickerValues(prev => ({ ...prev, [groupName]: val }))}
         >
@@ -70,11 +74,11 @@ export default function ExerciseSelectionScreen({ route }) {
   }
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 18 }}>Day {dayIndex + 1}</Text>
+    <View style={styles.container}>
+      <Text style={{ fontSize: 20, color: Colors.accent200 }}>Day {dayIndex + 1}</Text>
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Add Muscle Group:</Text>
-      <Picker selectedValue={selectedGroup} onValueChange={val => setSelectedGroup(val)}>
+      <Text style={{ fontWeight: "bold", marginTop: 10, color: Colors.accent500, fontSize: 20 }}>Add Muscle Group:</Text>
+      <Picker style={{ color: Colors.accent800, fontSize: 18 }} selectedValue={selectedGroup} onValueChange={val => setSelectedGroup(val)}>
         <Picker.Item label="Select Group" value={null} />
         {MUSCLE_GROUPS.map(g => <Picker.Item key={g} label={g} value={g} />)}
       </Picker>
@@ -91,4 +95,11 @@ export default function ExerciseSelectionScreen({ route }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.primary500o8,
+    flex: 1
+  }
+})
 

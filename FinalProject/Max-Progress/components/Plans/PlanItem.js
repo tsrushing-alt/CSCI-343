@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { Pressable, View, Text, StyleSheet } from "react-native";
+import Colors from "../../constants/colors/colors";
 
 export default function PlanItem(props) {
   const navigation = useNavigation();
@@ -10,7 +11,7 @@ export default function PlanItem(props) {
     });
   }
 
-  // Safely handle days and weeks rendering
+
   const daysDisplay = Array.isArray(props.days) ? props.days.length : props.days;
   const weeksDisplay = Array.isArray(props.weeks) ? props.weeks.length : props.weeks;
 
@@ -35,8 +36,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   textContainer: {
-    backgroundColor: "black",
-    padding: 10
+    backgroundColor: Colors.accent800,
+    padding: 10,
+    borderRadius: 8,
+    marginTop:8
   },
   text: {
     color: "white"

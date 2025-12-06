@@ -3,7 +3,7 @@ export default class Plan {
     this.id = id;
     this.title = title;
     this.numDays = numDays;
-    this.numWeeks = numWeeks;  // <-- must be stored!
+    this.numWeeks = numWeeks;
     this.days = Array.from({ length: numDays }, (_, i) => ({
       dayIndex: i,
       completed: false,

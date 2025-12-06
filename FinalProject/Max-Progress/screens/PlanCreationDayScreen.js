@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { View, Text, Button, FlatList, StyleSheet } from "react-native";
 import { PlanContext } from "../store/context/PlanContext";
 import DayItem from "../components/DayItem";
+import Colors from "../constants/colors/colors";
 
 export default function PlanCreationDayScreen({ navigation }) {
   const { currentPlan, saveCurrentPlan } = useContext(PlanContext);
@@ -37,9 +38,18 @@ export default function PlanCreationDayScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  optionsText: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+  container: { flex: 1, 
+    padding: 20,
+    backgroundColor: Colors.primary800, },
+  optionsText: { fontSize: 18, 
+    fontWeight: "bold", 
+    marginBottom: 10,
+    color: Colors.accent800 },
   list: { marginBottom: 20 },
-  buttonContainer: { marginTop: 20 }
+  buttonContainer: {
+    marginTop: 20,
+    marginBottom: 40
+     
+  }
 });
 

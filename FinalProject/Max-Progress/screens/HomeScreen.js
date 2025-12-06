@@ -3,6 +3,7 @@ import { useContext } from "react";
 import PlanList from "../components/Plans/PlanList";
 import { PlanContext } from "../store/context/PlanContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Colors from "../constants/colors/colors";
 
 export default function HomeScreen({ navigation }) {
   const { plans, setPlans, clearCurrentPlan } = useContext(PlanContext);
@@ -19,8 +20,8 @@ export default function HomeScreen({ navigation }) {
           onPress: async () => {
             try {
               await AsyncStorage.removeItem("plans");
-              setPlans([]); // clear saved plans
-              clearCurrentPlan(); // clear in-memory plan too
+              setPlans([]); 
+              clearCurrentPlan(); 
             } catch (e) {
               console.error("Error clearing plans:", e);
             }
@@ -38,7 +39,7 @@ export default function HomeScreen({ navigation }) {
         <Button
           title="Create New Plan"
           onPress={() => {
-            clearCurrentPlan(); // make sure currentPlan is reset
+            clearCurrentPlan(); 
             navigation.navigate("PlanCreation");
           }}
         />
@@ -55,7 +56,7 @@ export default function HomeScreen({ navigation }) {
           <Button
             title="Plan Debug"
             onPress={() => {
-              clearCurrentPlan(); // optional: clear before debugging
+              clearCurrentPlan(); 
               navigation.navigate("PlanDebug");
             }}
           />
@@ -66,6 +67,8 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: "white" },
+  container: { flex: 1, 
+    padding: 16, 
+    backgroundColor: Colors.primary300o5 },
   buttonContainer: { marginTop: 20 },
 });

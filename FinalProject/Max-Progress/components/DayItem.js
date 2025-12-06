@@ -1,4 +1,5 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
+import Colors from "../constants/colors/colors";
 
 export default function DayItem({ label, onPress }) {
   return (
@@ -14,8 +15,14 @@ export default function DayItem({ label, onPress }) {
 
 const styles = StyleSheet.create({
   container: { marginVertical: 4 },
-  pressable: { borderRadius: 8 },
-  textContainer: { backgroundColor: "black", padding: 10 },
+  pressable: { borderRadius: 8,
+    padding: 8
+   },
+  textContainer: { 
+    backgroundColor: Colors.accent500, 
+    padding: 10,
+    borderRadius: 8,
+   },
   text: { color: "white" }
 });
 

@@ -17,7 +17,7 @@ export default function TrainingPlanScreen() {
 
   if (!plan) return <Text>Plan not found</Text>;
 
-  // Split days into weeks
+  
   const daysPerWeek = Math.ceil(plan.days.length / plan.numWeeks);
   const weeks = Array.from({ length: plan.numWeeks }, (_, weekIdx) =>
     plan.days.slice(weekIdx * daysPerWeek, (weekIdx + 1) * daysPerWeek)

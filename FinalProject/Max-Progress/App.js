@@ -27,16 +27,23 @@ const Drawer = createDrawerNavigator();
 
 function TrainingPlansStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 }, 
+        headerTitle: "", 
+        headerTintColor: "white", 
+      }}
+    >
       <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="PlanCreation" component={PlanCreationScreen} />
-      <Stack.Screen name="PlanCreationDay" component={PlanCreationDayScreen} />
-      <Stack.Screen name="ExerciseSelection" component={ExerciseSelectionScreen} />
+      <Stack.Screen name="PlanCreation" component={PlanCreationScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="PlanCreationDay" component={PlanCreationDayScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="ExerciseSelection" component={ExerciseSelectionScreen} options={{headerShown: false}} />
       <Stack.Screen name="TrainingPlan" component={TrainingPlanScreen} />
       <Stack.Screen name="Workout" component={WorkoutScreen} />
     </Stack.Navigator>
   );
 }
+
 
 function DrawerNavigator() {
   return (
@@ -61,7 +68,7 @@ function DrawerNavigator() {
         name="TrainingPlans"
         component={TrainingPlansStack}
         options={{
-          title: "Training Plans",
+          title: "Max Progress",
           drawerLabel: "Training Plans",
           drawerIcon: ({ color, size }) => (
             <Entypo name="list" color={color} size={size} />

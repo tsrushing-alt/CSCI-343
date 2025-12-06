@@ -1,16 +1,17 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import PlanItem from "./PlanItem";
+import Colors from "../../constants/colors/colors";
 
 export default function PlanList(props) {
   function renderPlanItem(itemData) {
     const plan = itemData.item;
 
-    // Ensure required fields exist
+
     const planItemProps = {
       id: plan.id,
       title: plan.title || "Untitled Plan",
       days: plan.days || [],
-      weeks: plan.numWeeks || 0  // ✅ use numWeeks, not weeks
+      weeks: plan.numWeeks || 0 
     };
 
     return <PlanItem {...planItemProps} />;
@@ -32,6 +33,7 @@ export default function PlanList(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "pink"
+    backgroundColor: Colors.primary500,
+    borderRadius: 12
   }
 });
