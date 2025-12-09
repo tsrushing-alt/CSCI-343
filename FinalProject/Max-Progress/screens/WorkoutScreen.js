@@ -1,15 +1,41 @@
-import { useState } from "react";
-import { FlatList, Text, View, StyleSheet, TextInput, Button } from "react-native";
+import { useState, useContext, useEffect } from "react";
+import { FlatList, Text, View, StyleSheet, TextInput, Button, Alert } from "react-native";
+import { PlanContext } from "../store/context/PlanContext";
 
 export default function WorkoutScreen({ route }) {
-  const { day, weekIndex } = route.params;
+  const { currentPlan, submitDay } = useContext(PlanContext);
+  const { dayIndex, weekIndex } = route.params;
+
+  const day = currentPlan?.days?.[dayIndex];
   if (!day) return <Text>Day not found</Text>;
 
+  // ✅ Use state for submitted so we can call setSubmitted
+  const [submitted, setSubmitted] = useState(
+    day.muscleGroups.every(group =>
+      group.exercises.every(ex => ex.workoutSets?.length > 0)
+    )
+  );
 
+  // Sync submitted state if day changes (optional, useful if reopening screen)
+  useEffect(() => {
+    setSubmitted(
+      day.muscleGroups.every(group =>
+        group.exercises.every(ex => ex.workoutSets?.length > 0)
+      )
+    );
+  }, [day]);
+
+  // Debug currentPlan whenever it changes
+  useEffect(() => {
+    console.log("=== DEBUG: currentPlan changed ===");
+    console.log(JSON.stringify(currentPlan, null, 2));
+  }, [currentPlan]);
+
+  // Initialize exercise sets either from saved data or empty
   const initialSets = {};
   day.muscleGroups.forEach((group) => {
     group.exercises.forEach((ex) => {
-      initialSets[ex.id] = [{ weight: "", reps: "" }];
+      initialSets[ex.id] = ex.workoutSets ? [...ex.workoutSets] : [{ weight: "", reps: "" }];
     });
   });
 
@@ -28,6 +54,51 @@ export default function WorkoutScreen({ route }) {
       updated[index][field] = value;
       return { ...prev, [exerciseId]: updated };
     });
+  };
+
+  const submitWorkout = () => {
+    // Validate all fields
+    for (let exId in exerciseSets) {
+      for (let set of exerciseSets[exId]) {
+        if (!set.weight || !set.reps) {
+          Alert.alert("Incomplete Data", "Please fill all weight and reps fields before submitting.");
+          return;
+        }
+      }
+    }
+
+    // Confirm submission
+    Alert.alert(
+      "Confirm Submission",
+      "Once submitted, you won't be able to edit this workout. Are you sure?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Submit",
+          style: "destructive",
+          onPress: () => {
+            // Build updated day object
+            const updatedDay = { 
+              ...day, 
+              completed: true, // mark completed
+              muscleGroups: day.muscleGroups.map(g => ({
+                ...g,
+                exercises: g.exercises.map(ex => ({
+                  ...ex,
+                  workoutSets: exerciseSets[ex.id],
+                })),
+              })),
+            };
+
+            // Call submitDay from context
+            submitDay(day.dayIndex, updatedDay);
+
+            // Mark UI as submitted
+            setSubmitted(true);
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -51,23 +122,28 @@ export default function WorkoutScreen({ route }) {
                     style={styles.input}
                     placeholder="Weight"
                     value={set.weight}
+                    editable={!submitted}
                     onChangeText={(text) => updateSet(ex.id, idx, "weight", text)}
                   />
                   <TextInput
                     style={styles.input}
                     placeholder="Reps"
                     value={set.reps}
+                    editable={!submitted}
                     onChangeText={(text) => updateSet(ex.id, idx, "reps", text)}
                   />
                 </View>
               ))}
 
-              <Button title="Add Set" onPress={() => addSet(ex.id)} />
+              {!submitted && <Button title="Add Set" onPress={() => addSet(ex.id)} />}
             </View>
           ))}
         </View>
       )}
       contentContainerStyle={{ padding: 20 }}
+      ListFooterComponent={
+        !submitted && <Button title="Submit Workout" onPress={submitWorkout} />
+      }
     />
   );
 }
@@ -88,6 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
 });
+
 
 
 

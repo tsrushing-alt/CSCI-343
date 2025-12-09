@@ -8,7 +8,7 @@ export default function TrainingPlanScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const { planId } = route.params;
-  const { plans } = useContext(PlanContext);
+  const { plans, setCurrentPlanAndPersist } = useContext(PlanContext);
 
   const plan = plans.find(p => p.id === planId);
 
@@ -31,9 +31,14 @@ export default function TrainingPlanScreen() {
 
 
   const handleDaySelect = (day) => {
+    setCurrentPlanAndPersist(plan);  // Set the plan as current
     setModalVisible(false);
-    navigation.navigate("Workout", { day, weekIndex: selectedWeekIndex });
+    navigation.navigate("Workout", {
+      dayIndex: day.dayIndex,
+      weekIndex: selectedWeekIndex,
+    });
   };
+
 
   return (
     <View style={styles.container}>
