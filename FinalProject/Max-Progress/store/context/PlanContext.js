@@ -10,11 +10,23 @@ export function PlanProvider({ children }) {
 
   useEffect(() => {
     const loadPlans = async () => {
-      const stored = await AsyncStorage.getItem("plans");
-      if (stored) setPlans(JSON.parse(stored));
+      try {
+        const stored = await AsyncStorage.getItem("plans");
+        console.log("=== LOADED RAW FROM STORAGE ===");
+        console.log(stored);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          console.log("=== PARSED LOADED PLANS ===");
+          console.log(JSON.stringify(parsed, null, 2));
+          setPlans(parsed);
+        }
+      } catch (e) {
+        console.error("Error loading plans:", e);
+      }
     };
     loadPlans();
   }, []);
+
 
   const startNewPlan = (plan = null, numDays = 2, numWeeks = 3) => {
     if (plan) {
@@ -81,11 +93,24 @@ export function PlanProvider({ children }) {
     if (!currentPlan) return;
     const planToSave = JSON.parse(JSON.stringify(currentPlan));
     setPlans(prev => {
-      if (prev.some(p => p.id === planToSave.id)) return prev;
-      const updated = [...prev, planToSave];
+      let updated;
+
+      if (prev.some(p => p.id === planToSave.id)) {
+        // UPDATE existing plan
+        updated = prev.map(p =>
+          p.id === planToSave.id ? planToSave : p
+        );
+      } else {
+        // ADD new plan
+        updated = [...prev, planToSave];
+      }
+
       AsyncStorage.setItem("plans", JSON.stringify(updated));
       return updated;
     });
+
+    console.log("=== SAVING PLAN ===");
+    console.log(JSON.stringify(planToSave, null, 2));
   };
 
 
