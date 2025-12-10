@@ -8,25 +8,26 @@ export default function PlanCreationDayScreen({ navigation }) {
   const { currentPlan, saveCurrentPlan } = useContext(PlanContext);
   if (!currentPlan) return null;
 
-  function renderDayItem({ item }) {
-    return (
-      <DayItem
-        label={`Day ${item.dayIndex + 1}`}
-        onPress={() => navigation.navigate("ExerciseSelection", { dayIndex: item.dayIndex })}
-      />
-    );
-  }
+  const days = currentPlan.weeks.flatMap((week, wIndex) =>
+    week.days.map(d => ({ ...d, weekIndex: wIndex }))
+  );
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.optionsText}>Select Day to Enter Exercises</Text>
 
       <FlatList
-        data={currentPlan.days}
-        keyExtractor={item => item.dayIndex.toString()}
-        renderItem={renderDayItem}
-        style={styles.list}
+        data={Array.from({ length: currentPlan.numDays }, (_, i) => i)} // [0,1,...,n-1]
+        keyExtractor={item => item.toString()}
+        renderItem={({ item: dayIndex }) => (
+          <DayItem
+            label={`Day ${dayIndex + 1}`}
+            onPress={() => navigation.navigate("ExerciseSelection", { dayIndex })}
+          />
+        )}
       />
+
 
       <Button title="DEBUG: Show Plan Structure" onPress={() => console.log(currentPlan)} />
 

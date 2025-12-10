@@ -6,15 +6,17 @@ export default function WorkoutScreen({ route }) {
   const { currentPlan, submitDay } = useContext(PlanContext);
   const { dayIndex, weekIndex } = route.params;
 
-  const day = currentPlan?.days?.[dayIndex];
+  const day = currentPlan?.weeks?.[weekIndex]?.days?.[dayIndex];
   if (!day) return <Text>Day not found</Text>;
 
-  // ✅ Use state for submitted so we can call setSubmitted
+
   const [submitted, setSubmitted] = useState(
-    day.muscleGroups.every(group =>
+    day?.muscleGroups?.every(group =>
       group.exercises.every(ex => ex.workoutSets?.length > 0)
     )
   );
+
+
 
   // Sync submitted state if day changes (optional, useful if reopening screen)
   useEffect(() => {
@@ -27,8 +29,8 @@ export default function WorkoutScreen({ route }) {
 
   // Debug currentPlan whenever it changes
   useEffect(() => {
-    console.log("=== DEBUG: currentPlan changed ===");
-    console.log(JSON.stringify(currentPlan, null, 2));
+    //console.log("=== DEBUG: currentPlan changed ===");
+    //console.log(JSON.stringify(currentPlan, null, 2));
   }, [currentPlan]);
 
   // Initialize exercise sets either from saved data or empty
@@ -91,7 +93,7 @@ export default function WorkoutScreen({ route }) {
             };
 
             // Call submitDay from context
-            submitDay(day.dayIndex, updatedDay);
+            submitDay(weekIndex, dayIndex, updatedDay);
 
             // Mark UI as submitted
             setSubmitted(true);

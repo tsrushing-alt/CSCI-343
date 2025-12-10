@@ -21,13 +21,13 @@ export function PlanProvider({ children }) {
   useEffect(() => {
     const loadPlans = async () => {
       const stored = await AsyncStorage.getItem("plans");
-      console.log("=== LOADED RAW FROM STORAGE ===");
-      console.log(stored);
+      //console.log("=== LOADED RAW FROM STORAGE ===");
+      //console.log(stored);
 
       if (stored) {
         const parsed = JSON.parse(stored);
-        console.log("=== PARSED LOADED PLANS ===");
-        console.log(JSON.stringify(parsed, null, 2));
+        //console.log("=== PARSED LOADED PLANS ===");
+        //console.log(JSON.stringify(parsed, null, 2));
         setPlans(parsed);
       }
 
@@ -41,20 +41,19 @@ export function PlanProvider({ children }) {
     loadPlans();
   }, []);
 
-  // In PlanContext
-  const submitDay = async (dayIndex, updatedDay) => {
-    // 1. Mark the day as completed
+  const submitDay = async (weekIndex, dayIndex, updatedDay) => {
     const dayWithCompletion = { ...updatedDay, completed: true };
 
-    // 2. Update currentPlan.days
     setCurrentPlanAndPersist(prev => {
-      const updatedDays = [...prev.days];
-      updatedDays[dayIndex] = dayWithCompletion;
-      return { ...prev, days: updatedDays };
+      const updatedWeeks = [...prev.weeks];
+      updatedWeeks[weekIndex].days[dayIndex] = dayWithCompletion;
+      return { ...prev, weeks: updatedWeeks };
     });
 
-    // 3. Save to plans array
-    const planToSave = { ...currentPlan, days: currentPlan.days.map((d, i) => i === dayIndex ? dayWithCompletion : d) };
+    // Save to plans array
+    const planToSave = { ...currentPlan };
+    planToSave.weeks[weekIndex].days[dayIndex] = dayWithCompletion;
+
     setPlans(prev => {
       const updated = prev.some(p => p.id === planToSave.id)
         ? prev.map(p => p.id === planToSave.id ? planToSave : p)
@@ -65,19 +64,40 @@ export function PlanProvider({ children }) {
   };
 
 
-  // 🔥 Use persistence here
+
   const startNewPlan = (plan = null, numDays = 2, numWeeks = 3) => {
     if (plan) {
+      // For imported/old plans, convert days to weeks if needed
+      const weeks = [];
+      for (let w = 0; w < numWeeks; w++) {
+        const daysForWeek = plan.days
+          .slice(w * numDays, (w + 1) * numDays)
+          .map(d => ({ ...d }));
+        weeks.push({ days: daysForWeek });
+      }
+
       setCurrentPlanAndPersist({
         ...plan,
-        numDays: plan.numDays ?? plan.days?.length ?? numDays,
-        numWeeks: plan.numWeeks ?? numWeeks
+        numDays,
+        numWeeks,
+        weeks
       });
     } else {
-      const newPlan = new Plan(Date.now().toString(), "Custom Plan", numDays, numWeeks);
+      // Create a new plan with weeks and empty days
+      const weeks = [];
+      for (let w = 0; w < numWeeks; w++) {
+        const days = [];
+        for (let d = 0; d < numDays; d++) {
+          days.push({ dayIndex: d, completed: false, muscleGroups: [] });
+        }
+        weeks.push({ days });
+      }
+
+      const newPlan = { id: Date.now().toString(), title: "Custom Plan", numDays, numWeeks, weeks };
       setCurrentPlanAndPersist(newPlan);
     }
   };
+
 
   // 🔥 Persist changes
   const updateCurrentPlanField = (field, value) => {
@@ -93,42 +113,49 @@ export function PlanProvider({ children }) {
     });
   };
 
-  // 🔥 Persist changes
-  const addMuscleGroup = (dayIndex, groupName) => {
+  const addMuscleGroup = (dayIndex, group) => {
     setCurrentPlanAndPersist(prev => {
-      const days = prev.days.map(d => {
-        if (d.dayIndex === dayIndex) {
-          return {
-            ...d,
-            muscleGroups: [...d.muscleGroups, { name: groupName, exercises: [] }]
-          };
-        }
-        return d;
-      });
-      return { ...prev, days };
+      const updatedWeeks = prev.weeks.map(week => ({
+        ...week,
+        days: week.days.map(d => {
+          if (d.dayIndex === dayIndex) {
+            return {
+              ...d,
+              muscleGroups: [...d.muscleGroups, { ...group, exercises: [] }]
+            };
+          }
+          return d;
+        })
+      }));
+      return { ...prev, weeks: updatedWeeks };
     });
   };
 
-  // 🔥 Persist changes
+
+  // Add exercise to a day across all weeks
   const addExercise = (dayIndex, groupName, exercise) => {
     setCurrentPlanAndPersist(prev => {
-      const days = prev.days.map(d => {
-        if (d.dayIndex === dayIndex) {
-          return {
-            ...d,
-            muscleGroups: d.muscleGroups.map(g => {
-              if (g.name === groupName) {
-                return { ...g, exercises: [...g.exercises, exercise] };
-              }
-              return g;
-            })
-          };
-        }
-        return d;
+      const weeks = prev.weeks.map(week => {
+        const days = week.days.map((d, i) => {
+          if (i === dayIndex) {
+            return {
+              ...d,
+              muscleGroups: d.muscleGroups.map(g => {
+                if (g.name === groupName) {
+                  return { ...g, exercises: [...g.exercises, exercise] };
+                }
+                return g;
+              })
+            };
+          }
+          return d;
+        });
+        return { ...week, days };
       });
-      return { ...prev, days };
+      return { ...prev, weeks };
     });
   };
+
 
   // 🔥 Save to plans array AND persist
   const saveCurrentPlan = async () => {
@@ -149,8 +176,8 @@ export function PlanProvider({ children }) {
       return updated;
     });
 
-    console.log("=== SAVING PLAN ===");
-    console.log(JSON.stringify(planToSave, null, 2));
+    //console.log("=== SAVING PLAN ===");
+    //console.log(JSON.stringify(planToSave, null, 2));
   };
 
   const clearCurrentPlan = () => {

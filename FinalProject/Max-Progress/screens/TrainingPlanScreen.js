@@ -17,28 +17,27 @@ export default function TrainingPlanScreen() {
 
   if (!plan) return <Text>Plan not found</Text>;
 
-  console.log("=== TrainingPlanScreen plan.days ===");
-  console.log(JSON.stringify(plan.days, null, 2));
+  // Use first week as template for days
+  const templateWeekDays = plan.weeks?.[0]?.days || [];
+
+  //console.log("=== TrainingPlanScreen templateWeekDays ===");
+  //console.log(JSON.stringify(templateWeekDays, null, 2));
 
   const weekNumbers = Array.from({ length: plan.numWeeks }, (_, i) => i);
 
   const openWeekModal = (weekIdx) => {
-    console.log("Opening week modal. Using plan.days:", plan.days);
-
     setSelectedWeekIndex(weekIdx);
     setModalVisible(true);
   };
 
-
   const handleDaySelect = (day) => {
-    setCurrentPlanAndPersist(plan);  // Set the plan as current
+    setCurrentPlanAndPersist(plan); // Set the plan as current
     setModalVisible(false);
     navigation.navigate("Workout", {
       dayIndex: day.dayIndex,
       weekIndex: selectedWeekIndex,
     });
   };
-
 
   return (
     <View style={styles.container}>
@@ -58,12 +57,13 @@ export default function TrainingPlanScreen() {
       <ChooseDayModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        weekDays={plan.days}   // ALWAYS REUSE SAME DAYS
+        weekDays={templateWeekDays} // use first week's days
         onDaySelect={handleDaySelect}
       />
     </View>
   );
 }
+
 
 
 const styles = StyleSheet.create({

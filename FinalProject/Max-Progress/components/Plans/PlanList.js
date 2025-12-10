@@ -6,17 +6,14 @@ export default function PlanList(props) {
   function renderPlanItem(itemData) {
     const plan = itemData.item;
 
-
     const planItemProps = {
       id: plan.id,
       title: plan.title || "Untitled Plan",
-      days: plan.days || [],
-      weeks: plan.numWeeks || 0 
+      weeks: plan.weeks || [] // pass the weeks array directly
     };
 
     return <PlanItem {...planItemProps} />;
   }
-
 
   return (
     <View style={styles.container}>
@@ -29,6 +26,7 @@ export default function PlanList(props) {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

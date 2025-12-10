@@ -15,7 +15,7 @@ export default function ExerciseSelectionScreen({ route }) {
   const [pickerValues, setPickerValues] = useState({});
   const navigation = useNavigation();
 
-  const day = currentPlan.days.find(d => d.dayIndex === dayIndex);
+  const day = currentPlan.weeks[0].days[dayIndex]; // pick week 0 as template
   if (!day) return <Text>Day not found</Text>;
 
   const getExercises = (groupName) => {
@@ -26,24 +26,22 @@ export default function ExerciseSelectionScreen({ route }) {
   function addGroupHandler() {
     if (!selectedGroup) return Alert.alert("Select a muscle group");
     if (day.muscleGroups.some(g => g.name === selectedGroup)) return Alert.alert("Group already added");
-    addMuscleGroup(dayIndex, selectedGroup);
+
+    // Create a unique id for the group
+    const groupId = `${selectedGroup}-${Date.now()}`;
+    addMuscleGroup(dayIndex, { id: groupId, name: selectedGroup }); // pass object now
     setSelectedGroup(null);
   }
 
+
+  // Add exercise
   function addExerciseHandler(groupName) {
     const exerciseId = pickerValues[groupName];
     if (!exerciseId) return;
 
     const exerciseObj = EXERCISES.find(e => e.id === exerciseId);
-    const group = day.muscleGroups.find(g => g.name === groupName);
-    if (!group) return;
 
-    if (group.exercises.some(ex => ex.id === exerciseId)) {
-      Alert.alert("Exercise already added");
-      return;
-    }
-
-    addExercise(dayIndex, groupName, { id: exerciseObj.id, name: exerciseObj.name });
+    addExercise(dayIndex, groupName, { id: exerciseObj.id, name: exerciseObj.name }); // updates all weeks
     setPickerValues(prev => ({ ...prev, [groupName]: null }));
   }
 
@@ -55,9 +53,9 @@ export default function ExerciseSelectionScreen({ route }) {
     return (
       <View style={{ marginBottom: 20 }}>
         <Text style={{ fontWeight: "bold", color: Colors.accent200, fontSize: 20 }}>{groupName}</Text>
-        {exercises.map((ex, idx) => (
-          <Text style={{ color: Colors.accent800, fontSize: 18 }} key={`${groupName}-${ex.id}-${idx}`}>{ex.name}</Text>
-        ))}
+          {exercises.map((ex, idx) => (
+            <Text key={ex.id}>{ex.name}</Text>
+          ))}
 
         <Picker
           style={{ color: Colors.accent800, fontSize: 18 }}
@@ -86,12 +84,13 @@ export default function ExerciseSelectionScreen({ route }) {
 
       <FlatList
         data={day.muscleGroups}
-        keyExtractor={item => item.name}
+        keyExtractor={item => item.id}
         renderItem={renderGroup}
         style={{ marginTop: 20 }}
       />
-
-      <Button title="Submit" onPress={() => { saveCurrentPlan?.(); navigation.goBack(); }} />
+      <View style = {styles.buttonContainer}>
+        <Button style = {styles.button} title="Submit" onPress={() => { saveCurrentPlan?.(); navigation.goBack(); }} />
+      </View>
     </View>
   );
 }
@@ -100,6 +99,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.primary500o8,
     flex: 1
+  },
+  buttonContainer: {
+    marginBottom: 40
   }
 })
 
