@@ -9,7 +9,7 @@ export default function PlanList(props) {
     const planItemProps = {
       id: plan.id,
       title: plan.title || "Untitled Plan",
-      weeks: plan.weeks || [] // pass the weeks array directly
+      weeks: plan.weeks || [] 
     };
 
     return <PlanItem {...planItemProps} />;

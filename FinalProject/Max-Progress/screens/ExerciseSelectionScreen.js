@@ -29,7 +29,7 @@ export default function ExerciseSelectionScreen({ route }) {
 
     // Create a unique id for the group
     const groupId = `${selectedGroup}-${Date.now()}`;
-    addMuscleGroup(dayIndex, { id: groupId, name: selectedGroup }); // pass object now
+    addMuscleGroup(dayIndex, { id: groupId, name: selectedGroup }); 
     setSelectedGroup(null);
   }
 

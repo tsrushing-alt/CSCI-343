@@ -54,7 +54,7 @@ export default function TrainingPlanScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Scrollable part */}
+
       <View style={styles.scrollContainer}>
         <Text style={styles.title}>{plan.title}</Text>
         <Text style={styles.subtitle}>{plan.numWeeks} Weeks</Text>
@@ -125,14 +125,14 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginBottom: 40,
     marginTop: 40,
-    alignItems: "center" // center the button horizontally
+    alignItems: "center"
   },
   button: {
     backgroundColor: Colors.accent500,
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
-    width: "80%", // slightly narrower than full width
+    width: "80%", 
     alignItems: "center"
   },
   buttonText: {
