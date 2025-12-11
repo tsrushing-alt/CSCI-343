@@ -8,7 +8,7 @@ export function PlanProvider({ children }) {
   const [plans, setPlans] = useState([]);
   const [currentPlan, setCurrentPlan] = useState(null);
 
-  // 🔥 Save currentPlan AND update state, supports functional updates
+  
   const setCurrentPlanAndPersist = (update) => {
     setCurrentPlan(prev => {
       const newPlan = typeof update === "function" ? update(prev) : update;
@@ -17,11 +17,11 @@ export function PlanProvider({ children }) {
     });
   };
 
-  // 🔥 Load plans + restore last opened plan
+  
   useEffect(() => {
     const loadPlans = async () => {
       const stored = await AsyncStorage.getItem("plans");
-      //console.log("=== LOADED RAW FROM STORAGE ===");
+      //console.log("=== LOADED ===");
       //console.log(stored);
 
       if (stored) {
@@ -65,12 +65,13 @@ export function PlanProvider({ children }) {
 
 
 
-  const startNewPlan = (plan = null, numDays = 2, numWeeks = 3) => {
-    if (plan) {
-      // For imported/old plans, convert days to weeks if needed
+  const startNewPlan = (titleOrPlan = null, numDays = 2, numWeeks = 3) => {
+    if (titleOrPlan && typeof titleOrPlan === "object") {
+      const plan = titleOrPlan;
+      const planDays = plan.days || [];
       const weeks = [];
       for (let w = 0; w < numWeeks; w++) {
-        const daysForWeek = plan.days
+        const daysForWeek = planDays
           .slice(w * numDays, (w + 1) * numDays)
           .map(d => ({ ...d }));
         weeks.push({ days: daysForWeek });
@@ -80,31 +81,39 @@ export function PlanProvider({ children }) {
         ...plan,
         numDays,
         numWeeks,
-        weeks
+        weeks,
+        title: plan.title || "Custom Plan",
       });
-    } else {
-      // Create a new plan with weeks and empty days
-      const weeks = [];
-      for (let w = 0; w < numWeeks; w++) {
-        const days = [];
-        for (let d = 0; d < numDays; d++) {
-          days.push({ dayIndex: d, completed: false, muscleGroups: [] });
-        }
-        weeks.push({ days });
-      }
 
-      const newPlan = { id: Date.now().toString(), title: "Custom Plan", numDays, numWeeks, weeks };
+    } else {
+      const title = typeof titleOrPlan === "string" ? titleOrPlan : "Custom Plan";
+
+      const weeks = Array.from({ length: numWeeks }, (_, w) => ({
+        days: Array.from({ length: numDays }, (_, d) => ({
+          dayIndex: d,
+          completed: false,
+          muscleGroups: [],
+        }))
+      }));
+
+      const newPlan = {
+        id: Date.now().toString(),
+        title,
+        numDays,
+        numWeeks,
+        weeks,
+      };
+
       setCurrentPlanAndPersist(newPlan);
     }
   };
 
 
-  // 🔥 Persist changes
+
   const updateCurrentPlanField = (field, value) => {
     setCurrentPlanAndPersist(prev => ({ ...prev, [field]: value }));
   };
 
-  // 🔥 Persist changes
   const setDay = (dayIndex, dayObj) => {
     setCurrentPlanAndPersist(prev => {
       const updatedDays = [...prev.days];
@@ -157,7 +166,7 @@ export function PlanProvider({ children }) {
   };
 
 
-  // 🔥 Save to plans array AND persist
+  
   const saveCurrentPlan = async () => {
     if (!currentPlan) return;
 
@@ -198,7 +207,8 @@ export function PlanProvider({ children }) {
         saveCurrentPlan,
         clearCurrentPlan,
         setCurrentPlanAndPersist,
-        submitDay
+        submitDay,
+        setPlans
       }}
     >
       {children}

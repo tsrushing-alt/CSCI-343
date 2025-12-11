@@ -22,8 +22,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.accent500, 
     padding: 10,
     borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center"
    },
-  text: { color: "white" }
+  text: { 
+    color: Colors.primary300,
+    fontFamily: "robotoSemiBold",
+    fontSize: 22,
+   }
 });
 
 

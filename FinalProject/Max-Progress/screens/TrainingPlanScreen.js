@@ -3,12 +3,14 @@ import { useContext, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { PlanContext } from "../store/context/PlanContext";
 import ChooseDayModal from "../modal/ChooseDayModal";
+import Colors from "../constants/colors/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function TrainingPlanScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const { planId } = route.params;
-  const { plans, setCurrentPlanAndPersist } = useContext(PlanContext);
+  const { plans, setCurrentPlanAndPersist, clearCurrentPlan, setPlans } = useContext(PlanContext);
 
   const plan = plans.find(p => p.id === planId);
 
@@ -17,12 +19,7 @@ export default function TrainingPlanScreen() {
 
   if (!plan) return <Text>Plan not found</Text>;
 
-  // Use first week as template for days
   const templateWeekDays = plan.weeks?.[0]?.days || [];
-
-  //console.log("=== TrainingPlanScreen templateWeekDays ===");
-  //console.log(JSON.stringify(templateWeekDays, null, 2));
-
   const weekNumbers = Array.from({ length: plan.numWeeks }, (_, i) => i);
 
   const openWeekModal = (weekIdx) => {
@@ -31,7 +28,7 @@ export default function TrainingPlanScreen() {
   };
 
   const handleDaySelect = (day) => {
-    setCurrentPlanAndPersist(plan); // Set the plan as current
+    setCurrentPlanAndPersist(plan);
     setModalVisible(false);
     navigation.navigate("Workout", {
       dayIndex: day.dayIndex,
@@ -39,45 +36,112 @@ export default function TrainingPlanScreen() {
     });
   };
 
+  const handleDeletePlan = async () => {
+    if (!plan) return;
+
+    // Remove plan from AsyncStorage and context
+    const updatedPlans = plans.filter(p => p.id !== plan.id);
+    await AsyncStorage.setItem("plans", JSON.stringify(updatedPlans));
+
+    // Update context
+    setPlans(updatedPlans);
+    clearCurrentPlan(); // clears currentPlan
+
+    // Navigate back home
+    navigation.navigate("HomeScreen");
+  };
+
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{plan.title}</Text>
-      <Text style={styles.subtitle}>{plan.numWeeks} Weeks</Text>
+      {/* Scrollable part */}
+      <View style={styles.scrollContainer}>
+        <Text style={styles.title}>{plan.title}</Text>
+        <Text style={styles.subtitle}>{plan.numWeeks} Weeks</Text>
 
-      {weekNumbers.map((weekIdx) => (
-        <Pressable
-          key={weekIdx}
-          style={styles.weekButton}
-          onPress={() => openWeekModal(weekIdx)}
-        >
-          <Text style={styles.weekButtonText}>Week {weekIdx + 1}</Text>
+        {weekNumbers.map((weekIdx) => (
+          <Pressable
+            key={weekIdx}
+            style={styles.weekButton}
+            onPress={() => openWeekModal(weekIdx)}
+          >
+            <Text style={styles.weekButtonText}>Week {weekIdx + 1}</Text>
+          </Pressable>
+        ))}
+
+        <ChooseDayModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          weekDays={templateWeekDays}
+          onDaySelect={handleDaySelect}
+        />
+      </View>
+
+
+      <View style={styles.buttonContainer}>
+        <Pressable style={styles.button} onPress={handleDeletePlan}>
+          <Text style={styles.buttonText}>Delete Plan</Text>
         </Pressable>
-      ))}
-
-      <ChooseDayModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        weekDays={templateWeekDays} // use first week's days
-        onDaySelect={handleDaySelect}
-      />
+      </View>
     </View>
   );
+
 }
 
-
-
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 28, fontWeight: "bold", marginBottom: 10 },
-  subtitle: { fontSize: 18, marginBottom: 20 },
+  container: { 
+    flex: 1, 
+    padding: 20,
+    backgroundColor: Colors.primary500
+  },
+  scrollContainer: {
+    flex: 1,
+    paddingBottom: 40
+  },
+  title: { 
+    fontSize: 28, 
+    marginBottom: 10,
+    color: Colors.accent200,
+    fontFamily: "cinzelSemiBold"
+  },
+  subtitle: { 
+    fontSize: 20,
+    marginBottom: 30,
+    color: Colors.accent200,
+    fontFamily: "robotoRegular"
+  },
   weekButton: {
-    backgroundColor: "black",
+    backgroundColor: Colors.accent500,
     padding: 12,
     borderRadius: 8,
-    marginBottom: 12,
+    marginBottom: 18,
     alignItems: "center",
   },
-  weekButtonText: { color: "white", fontWeight: "bold", fontSize: 16 },
+  weekButtonText: { 
+    color: Colors.primary300, 
+    fontFamily: "robotoSemiBold", 
+    fontSize: 22
+  },
+  buttonContainer: {
+    marginBottom: 40,
+    marginTop: 40,
+    alignItems: "center" // center the button horizontally
+  },
+  button: {
+    backgroundColor: Colors.accent500,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    width: "80%", // slightly narrower than full width
+    alignItems: "center"
+  },
+  buttonText: {
+    color: Colors.primary300,
+    fontSize: 18,
+    fontFamily: "robotoSemiBold",
+    textAlign: "center"
+  },
 });
+
 
 

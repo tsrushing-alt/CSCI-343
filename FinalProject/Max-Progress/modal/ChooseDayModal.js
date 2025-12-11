@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, View, Text, FlatList, Pressable, StyleSheet } from "react-native";
 import DayItem from "../components/DayItem";
+import Colors from "../constants/colors/colors";
 
 export default function ChooseDayModal({ visible, onClose, weekDays, onDaySelect }) {
   return (
@@ -22,7 +23,7 @@ export default function ChooseDayModal({ visible, onClose, weekDays, onDaySelect
                 onPress={() => onDaySelect(item)}
               >
                 <Text style={styles.dayButtonText}>
-                  Day {item.dayIndex + 1} ({exerciseCount} exercises)
+                  Day {item.dayIndex + 1} ({exerciseCount} Exercises)
                 </Text>
               </Pressable>
             );
@@ -41,23 +42,25 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     padding: 20,
-    backgroundColor: "white",
+    backgroundColor: Colors.primary500o8,
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontSize: 26,
+    fontFamily: "cinzelSemiBold",
+    marginBottom: 30,
+    color: Colors.accent200
   },
   dayButton: {
-    backgroundColor: "black",
+    backgroundColor: Colors.accent500,
     padding: 12,
     borderRadius: 8,
-    marginVertical: 6,
+    marginVertical: 12,
     alignItems: "center",
   },
   dayButtonText: {
-    color: "white",
-    fontSize: 16,
+    color: Colors.primary300,
+    fontSize: 22,
+    fontFamily: "robotoSemiBold"
   },
 });
 

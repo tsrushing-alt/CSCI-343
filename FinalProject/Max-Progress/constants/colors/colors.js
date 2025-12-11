@@ -3,6 +3,7 @@ const Colors = {
   accent500: "#B08A2E",
   accent800: "#8C6D1F",
 
+  primary200: "#CFCFCF",
   primary300o5: "rgba(255, 255, 255, 0.6)",
   primary300: "#ECECEC",
   primary500o8: "rgba(20, 20, 20, 0.8)",

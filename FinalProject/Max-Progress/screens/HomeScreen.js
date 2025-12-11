@@ -1,4 +1,4 @@
-import { View, Button, StyleSheet, Alert } from "react-native";
+import { View, Button, StyleSheet, Alert, Pressable, Text } from "react-native";
 import { useContext } from "react";
 import PlanList from "../components/Plans/PlanList";
 import { PlanContext } from "../store/context/PlanContext";
@@ -6,61 +6,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../constants/colors/colors";
 
 export default function HomeScreen({ navigation }) {
-  const { plans, setPlans, clearCurrentPlan } = useContext(PlanContext);
+  const { plans, clearCurrentPlan } = useContext(PlanContext);
 
-  const clearPlans = async () => {
-    Alert.alert(
-      "Confirm",
-      "Are you sure you want to delete all exercise plans?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Yes, Clear",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await AsyncStorage.removeItem("plans");
-              setPlans([]); 
-              clearCurrentPlan(); 
-            } catch (e) {
-              console.error("Error clearing plans:", e);
-            }
-          },
-        },
-      ]
-    );
-  };
 
   return (
     <View style={styles.container}>
       <PlanList items={plans} />
 
       <View style={styles.buttonContainer}>
-        <Button
-          title="Create New Plan"
+        <Pressable
           onPress={() => {
             clearCurrentPlan(); 
             navigation.navigate("PlanCreation");
           }}
-        />
-
-        <View style={{ marginTop: 10 }}>
-          <Button
-            title="Clear All Plans"
-            color="red"
-            onPress={clearPlans}
-          />
-        </View>
-
-        <View style={{ marginTop: 10 }}>
-          <Button
-            title="Plan Debug"
-            onPress={() => {
-              clearCurrentPlan(); 
-              navigation.navigate("PlanDebug");
-            }}
-          />
-        </View>
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Create New Plan</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -69,6 +31,21 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, 
     padding: 16, 
-    backgroundColor: Colors.primary300o5 },
-  buttonContainer: { marginTop: 20 },
+    backgroundColor: Colors.primary800 },
+  buttonContainer: { 
+    marginTop: 20,
+    marginBottom: 40 },
+  button: {
+    backgroundColor: Colors.accent500,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8
+  },
+  buttonText: {
+    color: Colors.primary300,
+    fontSize: 18,
+    fontFamily: "robotoSemiBold",
+    textAlign: "center"
+  }
+
 });

@@ -11,12 +11,9 @@ export default function PlanItem(props) {
     });
   }
 
-  // New: count days from first week
-  const daysDisplay = Array.isArray(props.weeks) && props.weeks.length > 0
-    ? props.weeks[0].days.length
-    : 0;
 
-  const weeksDisplay = Array.isArray(props.weeks) ? props.weeks.length : 0;
+  const daysDisplay = Array.isArray(props.weeks?.[0]?.days) ? props.weeks[0].days.length : 0;
+  const weeksDisplay = Array.isArray(props.weeks) ? props.weeks.length : props.weeks;
 
   return (
     <View style={styles.container}>
@@ -31,7 +28,6 @@ export default function PlanItem(props) {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {},
   pressable: {
@@ -41,11 +37,13 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     backgroundColor: Colors.accent800,
-    padding: 10,
+    padding: 12,
     borderRadius: 8,
-    marginTop:8
+    marginTop:12
   },
   text: {
-    color: "white"
+    color: Colors.primary300,
+    fontSize: 18,
+    fontFamily: "robotoRegular"
   }
 });

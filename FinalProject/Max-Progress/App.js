@@ -4,98 +4,34 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import { Entypo } from "@expo/vector-icons";
 
 import Colors from './constants/colors/colors';
 import { PlanProvider } from './store/context/PlanContext';
 
 // Screens
-import SettingsScreen from './screens/SettingsScreen';
 import HomeScreen from './screens/HomeScreen';
 import PlanCreationScreen from './screens/PlanCreationScreen';
 import PlanCreationDayScreen from './screens/PlanCreationDayScreen';
 import ExerciseSelectionScreen from './screens/ExerciseSelectionScreen';
 import TrainingPlanScreen from './screens/TrainingPlanScreen';
 import WorkoutScreen from './screens/WorkoutScreen';
+// import SettingsScreen from './screens/SettingsScreen'; // Not using for now
 
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
-
-function TrainingPlansStack() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 }, 
-        headerTitle: "", 
-        headerTintColor: "white", 
-      }}
-    >
-      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="PlanCreation" component={PlanCreationScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="PlanCreationDay" component={PlanCreationDayScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="ExerciseSelection" component={ExerciseSelectionScreen} options={{headerShown: false}} />
-      <Stack.Screen name="TrainingPlan" component={TrainingPlanScreen} />
-      <Stack.Screen name="Workout" component={WorkoutScreen} />
-    </Stack.Navigator>
-  );
-}
-
-
-function DrawerNavigator() {
-  return (
-    <Drawer.Navigator
-      initialRouteName="TrainingPlans"
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
-        headerTitleStyle: {
-          fontFamily: "nolluqa",
-          fontSize: 40,
-          color: Colors.accent800
-        },
-        sceneContainerStyle: { backgroundColor: Colors.primary300 },
-        drawerContentStyle: { backgroundColor: Colors.primary500 },
-        drawerInactiveTintColor: Colors.primary300,
-        drawerActiveTintColor: Colors.accent500,
-        drawerActiveBackgroundColor: Colors.primary800
-      }}
-    >
-      <Drawer.Screen
-        name="TrainingPlans"
-        component={TrainingPlansStack}
-        options={{
-          title: "Max Progress",
-          drawerLabel: "Training Plans",
-          drawerIcon: ({ color, size }) => (
-            <Entypo name="list" color={color} size={size} />
-          )
-        }}
-      />
-      <Drawer.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          title: "Settings",
-          drawerLabel: "Settings",
-          drawerIcon: ({ color, size }) => (
-            <Entypo name="cog" color={color} size={size} />
-          )
-        }}
-      />
-    </Drawer.Navigator>
-  );
-}
 
 export default function App() {
   const [loaded] = Font.useFonts({
-    playfair: require("./assets/fonts/Playfair.ttf"),
-    playfairBold: require("./assets/fonts/PlayfairBold.ttf"),
-    playfairBoldItalic: require("./assets/fonts/PlayfairBoldItalic.ttf"),
-    nolluqa: require("./assets/fonts/NolluqaRegular.otf"),
+    robotoRegular: require("./assets/fonts/RobotoSlab-Regular.ttf"),
+    robotoLight: require("./assets/fonts/RobotoSlab-Light.ttf"),
+    robotoSemiBold: require("./assets/fonts/RobotoSlab-SemiBold.ttf"),
+    cinzelRegular: require("./assets/fonts/Cinzel-Regular.ttf"),
+    cinzelMedium: require("./assets/fonts/Cinzel-Medium.ttf"),
+    cinzelSemiBold: require("./assets/fonts/Cinzel-SemiBold.ttf")
+
+
   });
 
   useEffect(() => {
@@ -108,21 +44,31 @@ export default function App() {
 
   return (
     <PlanProvider>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="DrawerScreen"
+          initialRouteName="HomeScreen"
           screenOptions={{
-            headerTintColor: Colors.primary300,
             headerStyle: { backgroundColor: Colors.primary500 },
-            contentStyle: { backgroundColor: "black" }
+            headerTintColor: 'white',
+            headerTitleStyle: {
+              fontFamily: "cinzelMedium",
+              fontSize: 40,
+              color: Colors.accent200
+            },
+            contentStyle: { backgroundColor: Colors.primary300 },
           }}
         >
-          <Stack.Screen
-            name="DrawerScreen"
-            component={DrawerNavigator}
-            options={{ headerShown: false }}
+          <Stack.Screen 
+            name="HomeScreen" 
+            component={HomeScreen} 
+            options={{ title: "Max Progress" }} 
           />
+          <Stack.Screen name="PlanCreation" component={PlanCreationScreen} options={{ headerTitle: "" }}/>
+          <Stack.Screen name="PlanCreationDay" component={PlanCreationDayScreen} options={{ headerTitle: "" }}/>
+          <Stack.Screen name="ExerciseSelection" component={ExerciseSelectionScreen} options={{ headerTitle: "" }}/>
+          <Stack.Screen name="TrainingPlan" component={TrainingPlanScreen} options={{ headerTitle: "" }}/>
+          <Stack.Screen name="Workout" component={WorkoutScreen} options={{ headerTitle: "" }}/>
         </Stack.Navigator>
       </NavigationContainer>
     </PlanProvider>
@@ -137,3 +83,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+

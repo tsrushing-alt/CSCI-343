@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { View, Text, Button, FlatList, Alert, StyleSheet } from "react-native";
+import { View, Text, Button, FlatList, Alert, StyleSheet, Pressable } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 import { PlanContext } from "../store/context/PlanContext";
@@ -52,9 +52,9 @@ export default function ExerciseSelectionScreen({ route }) {
 
     return (
       <View style={{ marginBottom: 20 }}>
-        <Text style={{ fontWeight: "bold", color: Colors.accent200, fontSize: 20 }}>{groupName}</Text>
+        <Text style={styles.groupText}>{groupName}</Text>
           {exercises.map((ex, idx) => (
-            <Text key={ex.id}>{ex.name}</Text>
+            <Text style = {styles.exerciseText} key={ex.id}>{ex.name}</Text>
           ))}
 
         <Picker
@@ -73,9 +73,11 @@ export default function ExerciseSelectionScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 20, color: Colors.accent200 }}>Day {dayIndex + 1}</Text>
+      <View style= {styles.titleContainer}>
+        <Text style={ styles.title}>Day {dayIndex + 1}</Text>
+      </View>
 
-      <Text style={{ fontWeight: "bold", marginTop: 10, color: Colors.accent500, fontSize: 20 }}>Add Muscle Group:</Text>
+      <Text style={styles.addGroupLabel}>Add Muscle Group:</Text>
       <Picker style={{ color: Colors.accent800, fontSize: 18 }} selectedValue={selectedGroup} onValueChange={val => setSelectedGroup(val)}>
         <Picker.Item label="Select Group" value={null} />
         {MUSCLE_GROUPS.map(g => <Picker.Item key={g} label={g} value={g} />)}
@@ -88,8 +90,16 @@ export default function ExerciseSelectionScreen({ route }) {
         renderItem={renderGroup}
         style={{ marginTop: 20 }}
       />
-      <View style = {styles.buttonContainer}>
-        <Button style = {styles.button} title="Submit" onPress={() => { saveCurrentPlan?.(); navigation.goBack(); }} />
+      <View style={styles.buttonContainer}>
+        <Pressable
+          style={styles.button}
+          onPress={() => {
+            saveCurrentPlan?.();
+            navigation.goBack();
+          }}
+        >
+          <Text style={styles.buttonText}>Submit</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -97,11 +107,48 @@ export default function ExerciseSelectionScreen({ route }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.primary500o8,
-    flex: 1
+    backgroundColor: Colors.primary500,
+    flex: 1,
   },
   buttonContainer: {
     marginBottom: 40
+  },
+  button: {
+    backgroundColor: Colors.accent500,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8
+  },
+  buttonText: {
+    color: Colors.primary300,
+    fontSize: 18,
+    fontFamily: "robotoSemiBold",
+    textAlign: "center"
+  },
+  exerciseText: {
+    color: Colors.accent200,
+    fontSize: 16,
+    marginLeft: 14,
+    marginTop: 10,
+    fontFamily: "robotoRegular"
+  },
+  titleContainer: {
+    marginBottom: 20
+  },
+  title: {
+    color: Colors.accent200,
+    fontSize: 28,
+    fontFamily: "cinzelSemiBold"
+  },
+  groupText: {
+    fontFamily: "robotoSemiBold",
+    fontSize: 24,
+    color: Colors.accent200
+  },
+  addGroupLabel: {
+    color: Colors.accent200,
+    fontFamily: "robotoSemiBold",
+    fontSize: 24
   }
 })
 

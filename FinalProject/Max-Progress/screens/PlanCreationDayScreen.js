@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { View, Text, Button, FlatList, StyleSheet } from "react-native";
+import { View, Text, Button, FlatList, StyleSheet, Pressable } from "react-native";
 import { PlanContext } from "../store/context/PlanContext";
 import DayItem from "../components/DayItem";
 import Colors from "../constants/colors/colors";
@@ -28,11 +28,16 @@ export default function PlanCreationDayScreen({ navigation }) {
         )}
       />
 
-
-      <Button title="DEBUG: Show Plan Structure" onPress={() => console.log(currentPlan)} />
-
       <View style={styles.buttonContainer}>
-        <Button title="Finish" onPress={() => { saveCurrentPlan?.(); navigation.popToTop(); }} />
+        <Pressable
+          style={styles.button}
+          onPress={() => {
+            saveCurrentPlan?.();
+            navigation.popToTop();
+          }}
+        >
+          <Text style={styles.buttonText}>Finish</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -41,16 +46,28 @@ export default function PlanCreationDayScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, 
     padding: 20,
-    backgroundColor: Colors.primary800, },
+    backgroundColor: Colors.primary500, },
   optionsText: { fontSize: 18, 
-    fontWeight: "bold", 
+    fontFamily: "cinzelMedium",
+    fontSize: 22,
     marginBottom: 10,
-    color: Colors.accent800 },
+    color: Colors.accent200 },
   list: { marginBottom: 20 },
   buttonContainer: {
     marginTop: 20,
-    marginBottom: 40
-     
+    marginBottom: 40,
+  },
+  button: {
+    backgroundColor: Colors.accent500,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8
+  },
+  buttonText: {
+    color: Colors.primary300,
+    fontSize: 18,
+    fontFamily: "robotoSemiBold",
+    textAlign: "center"
   }
 });
 
